@@ -1,19 +1,16 @@
 /******************************************************************************
- * hinv.cpp
+ * hpairs.cpp
  *  auther  Ahmed Samieh
  *  email   ahmed.samieh@gmail.com
  *
- *          contains test app for hypergraph_load, hypergraph_invers,
- *          and hypergraph_save APIs
+ *          contains test app for hypergraph_load, hypergraph_save_pairs APIs
  ******************************************************************************/
 #include "hypergraph_file.h"
-#include "hypergraph_inverse.h"
 
 int main(int argc, char **argv)
 {
     int  nhedges = 0, nvtxs = 0;
     int *eptr = NULL, *eind = NULL;
-    int *vptr = NULL, *vind = NULL;
 
     if (argc == 1)
     {
@@ -23,14 +20,7 @@ int main(int argc, char **argv)
     {
         hypergraph_load(argv[1], &nhedges, &nvtxs, &eptr, &eind);
     }
-    // inverse the hypergraph
-    vptr = new int[nvtxs + 1];
-    vind = new int[eptr[nhedges]];
-    hypergraph_invers(nhedges, nvtxs, eptr, eind, vptr, vind);
-    hypergraph_save(stdout, nvtxs, nhedges, vptr, vind);
-
-    delete[] vptr;
-    delete[] vind;
+    hypergraph_save_pairs(stdout, nhedges, eptr, eind);
     delete[] eptr;
     delete[] eind;
     return 0;

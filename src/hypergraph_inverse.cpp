@@ -1,9 +1,19 @@
+/******************************************************************************
+ * hypergraph_invers.cpp
+ *  auther  Ahmed Samieh
+ *  email   ahmed.samieh@gmail.com
+ *
+ *          contains the code to invers hypergraph,
+ *          convert hyperedges to vertices and visa versa.
+ *          size of eptr will be changed from nhedges+1 to nvtxs+1
+ ******************************************************************************/
+#include <cstdio>
 #include <list>
 
 using namespace std;
 
 void hypergraph_invers(int  nhedges,
-                       int nvtxs,
+                       int  nvtxs,
                        int *eptr,
                        int *eind,
                        int *vptr,

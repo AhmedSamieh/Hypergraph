@@ -1,3 +1,10 @@
+/******************************************************************************
+ * hypergraph_file.cpp
+ *  auther  Ahmed Samieh
+ *  email   ahmed.samieh@gmail.com
+ *
+ *          contains the code to load and save hypergraph files.
+ ******************************************************************************/
 #include <cstdio>
 #include <cstring>
 #include <list>
@@ -6,10 +13,10 @@
 using namespace std;
 
 void hypergraph_load(const char *filename,
-                     int *nhedges,
-                     int *nvtxs,
-                     int **eptr,
-                     int **eind)
+                     int        *nhedges,
+                     int        *nvtxs,
+                     int       **eptr,
+                     int       **eind)
 {
     FILE *fp;
     if ((fp = fopen(filename, "r")) != NULL)
@@ -17,10 +24,14 @@ void hypergraph_load(const char *filename,
         hypergraph_load(fp, nhedges, nvtxs, eptr, eind);
         fclose(fp);
     }
+    else
+    {
+        printf("Cannot Open File %s\n", filename);
+    }
 }
 void hypergraph_load(FILE *fp,
-                     int *nhedges,
-                     int *nvtxs,
+                     int  *nhedges,
+                     int  *nvtxs,
                      int **eptr,
                      int **eind)
 {
@@ -72,10 +83,10 @@ void hypergraph_load(FILE *fp,
     delete[] hedges;
 }
 void hypergraph_save(const char *filename,
-                     int nhedges,
-                     int nvtxs,
-                     int *eptr,
-                     int *eind)
+                     int         nhedges,
+                     int         nvtxs,
+                     int        *eptr,
+                     int        *eind)
 {
     FILE *fp;
     if ((fp = fopen(filename, "w")) != NULL)
@@ -83,12 +94,16 @@ void hypergraph_save(const char *filename,
         hypergraph_save(fp, nhedges, nvtxs, eptr, eind);
         fclose(fp);
     }
+    else
+    {
+        printf("Cannot Open File %s\n", filename);
+    }
 }
 void hypergraph_save(FILE *fp,
-                     int nhedges,
-                     int nvtxs,
-                     int *eptr,
-                     int *eind)
+                     int   nhedges,
+                     int   nvtxs,
+                     int  *eptr,
+                     int  *eind)
 {
     int i, j;
 
@@ -100,5 +115,36 @@ void hypergraph_save(FILE *fp,
             fprintf(fp, "%s%d", j == eptr[i] ? "" : " ", eind[j]);
         }
         fprintf(fp, "\n");
+    }
+}
+void hypergraph_save_pairs(const char *filename,
+                           int         nhedges,
+                           int        *eptr,
+                           int        *eind)
+{
+    FILE *fp;
+    if ((fp = fopen(filename, "w")) != NULL)
+    {
+        hypergraph_save_pairs(fp, nhedges, eptr, eind);
+        fclose(fp);
+    }
+    else
+    {
+        printf("Cannot Open File %s\n", filename);
+    }
+}
+void hypergraph_save_pairs(FILE *fp,
+                           int   nhedges,
+                           int  *eptr,
+                           int  *eind)
+{
+    int i, j;
+
+    for (i = 0; i < nhedges; i++)
+    {
+        for (j = eptr[i]; j < eptr[i + 1]; j++)
+        {
+            fprintf(fp, "%d %d\n", i + 1, eind[j] + 1);
+        }
     }
 }
