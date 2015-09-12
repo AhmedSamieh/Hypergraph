@@ -144,7 +144,7 @@ void hypergraph_save_pairs(FILE *fp,
     {
         for (j = eptr[i]; j < eptr[i + 1]; j++)
         {
-            fprintf(fp, "%d %d\n", i + 1, eind[j] + 1);
+            fprintf(fp, "%d %d\n", i, eind[j]);
         }
     }
 }
