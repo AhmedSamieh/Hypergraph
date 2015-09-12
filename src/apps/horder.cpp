@@ -4,7 +4,7 @@
  *  email   ahmed.samieh@gmail.com
  *
  *          contains test app for hypergraph_load, CutHillMcKee,
- *          apply_ order APIs
+ *          apply_order APIs
  ******************************************************************************/
 #include "hypergraph_file.h"
 #include "order.h"
