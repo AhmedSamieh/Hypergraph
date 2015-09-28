@@ -37,7 +37,8 @@ void hypergraph_load(FILE *fp,
 {
     char buffer[128];
     list<int> *hedges;
-    int number, offset, delta, hedges_index, counter;
+    int number, delta, hedges_index, counter;
+    unsigned int offset;
     char byte, byte2;
     fgets(buffer, sizeof(buffer), fp);
     sscanf(buffer, "%d%c%d%c%n", nhedges, &byte, nvtxs, &byte2, &delta);
@@ -148,3 +149,4 @@ void hypergraph_save_pairs(FILE *fp,
         }
     }
 }
+

@@ -1,18 +1,19 @@
 /******************************************************************************
- * horder.cpp
+ * hedges.cpp
  *  auther  Ahmed Samieh
  *  email   ahmed.samieh@gmail.com
  *
- *          contains test app for hypergraph_load, CutHillMcKee,
- *          apply_order APIs
+ *          contains test app for hypergraph_load, hypergraph_edges,
+ *          and hypergraph_save APIs
  ******************************************************************************/
 #include "hypergraph_file.h"
-#include "order.h"
+#include "hypergraph_edges.h"
 
 int main(int argc, char **argv)
 {
     int  nhedges = 0, nvtxs = 0;
     int *eptr = NULL, *eind = NULL;
+    int *edges_eptr = NULL, *edges_eind = NULL;
 
     if (argc == 1)
     {
@@ -22,11 +23,12 @@ int main(int argc, char **argv)
     {
         hypergraph_load(argv[1], &nhedges, &nvtxs, &eptr, &eind);
     }
-    int *order = new int[nhedges];
-    CutHillMcKee(nhedges, eptr, eind, order);
-    apply_order(nhedges, &eptr, &eind, order);
-    hypergraph_save(stdout, nhedges, nvtxs, eptr, eind);
-    delete[] order;
+    // get edge_edges graph from edge_vertices hypergraph
+    hypergraph_edges(nhedges, nvtxs, eptr, eind, &edges_eptr, &edges_eind);
+    hypergraph_save(stdout, nhedges, nhedges, edges_eptr, edges_eind);
+
+    delete[] edges_eptr;
+    delete[] edges_eind;
     delete[] eptr;
     delete[] eind;
     return 0;

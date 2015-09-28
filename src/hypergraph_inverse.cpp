@@ -12,14 +12,20 @@
 
 using namespace std;
 
-void hypergraph_invers(int  nhedges,
-                       int  nvtxs,
-                       int *eptr,
-                       int *eind,
-                       int *vptr,
-                       int *vind)
+void hypergraph_invers(int   nhedges,
+                       int   nvtxs,
+                       int  *eptr,
+                       int  *eind,
+                       int **inv_eptr,
+                       int **inv_eind)
 {
+    if (inv_eptr == NULL || inv_eind == NULL)
+    {
+        return;
+    }
     list<int> *vtxs = new list<int>[nvtxs];
+    *inv_eptr = new int[nvtxs + 1];
+    *inv_eind = new int[eptr[nhedges]];
     for (int i = 0; i < nhedges; i++)
     {
         for (int j = eptr[i]; j < eptr[i + 1]; j++)
@@ -27,20 +33,18 @@ void hypergraph_invers(int  nhedges,
             vtxs[eind[j]].push_back(i);
         }
     }
-    if (vptr != NULL && vind != NULL)
+    int j = 0;
+    for (int i = 0; i < nvtxs; i++)
     {
-        int j = 0;
-        for (int i = 0; i < nvtxs; i++)
+        (*inv_eptr)[i] = j;
+        for (list<int>::iterator iter = vtxs[i].begin();
+             iter != vtxs[i].end();
+             iter++)
         {
-            vptr[i] = j;
-            for (list<int>::iterator iter = vtxs[i].begin();
-                 iter != vtxs[i].end();
-                 iter++)
-            {
-                vind[j++] = *iter;
-            }
+            (*inv_eind)[j++] = *iter;
         }
-        vptr[nvtxs] = j;
     }
+    (*inv_eptr)[nvtxs] = j;
     delete[] vtxs;
 }
+

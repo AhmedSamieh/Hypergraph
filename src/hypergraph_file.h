@@ -37,3 +37,4 @@ void hypergraph_save_pairs(FILE *fp,
                            int  *eptr,
                            int  *eind);
 #endif
+

@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 {
     int  nhedges = 0, nvtxs = 0;
     int *eptr = NULL, *eind = NULL;
-    int *vptr = NULL, *vind = NULL;
+    int *inv_eptr = NULL, *inv_eind = NULL;
 
     if (argc == 1)
     {
@@ -24,14 +24,13 @@ int main(int argc, char **argv)
         hypergraph_load(argv[1], &nhedges, &nvtxs, &eptr, &eind);
     }
     // inverse the hypergraph
-    vptr = new int[nvtxs + 1];
-    vind = new int[eptr[nhedges]];
-    hypergraph_invers(nhedges, nvtxs, eptr, eind, vptr, vind);
-    hypergraph_save(stdout, nvtxs, nhedges, vptr, vind);
+    hypergraph_invers(nhedges, nvtxs, eptr, eind, &inv_eptr, &inv_eind);
+    hypergraph_save(stdout, nvtxs, nhedges, inv_eptr, inv_eind);
 
-    delete[] vptr;
-    delete[] vind;
+    delete[] inv_eptr;
+    delete[] inv_eind;
     delete[] eptr;
     delete[] eind;
     return 0;
 }
+

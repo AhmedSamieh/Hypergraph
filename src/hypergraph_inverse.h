@@ -9,5 +9,11 @@
  ******************************************************************************/
 #ifndef HYPERGRAPH_INVERS_H
 #define HYPERGRAPH_INVERS_H
-void hypergraph_invers(int  nhedges, int  nvtxs, int *eptr, int *eind, int *vptr, int *vind);
+void hypergraph_invers(int   nhedges,
+                       int   nvtxs,
+                       int  *eptr,
+                       int  *eind,
+                       int **inv_eptr,
+                       int **inv_eind);
 #endif
+
