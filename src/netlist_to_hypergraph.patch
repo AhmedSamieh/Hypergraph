@@ -1,0 +1,74 @@
+11a12
+> #include "ngspice/devdefs.h" // Ahmed Samieh
+148a150,220
+> 
+>         /* Ahmed Samieh - start of create devices_nodes hypergraph */
+>         int nodes_counter = (ckt->CKTlastNode->number + 1);
+>         printf("Samieh >> Number of nodes : %d\r\n", nodes_counter);
+>         int devices_counter = 0;
+>         int i;
+>         for (i = 0; i < DEVmaxnum; i++)
+>         {
+>             GENmodel *model;
+>             for (model = ckt->CKThead[i]; model != NULL; model = model->GENnextModel) // sub model (NTYPE, PTYPE, ... etc)
+>             {
+>                 GENinstance *instance;
+>                 for (instance = model->GENinstances; instance; instance = instance->GENnextInstance)
+>                 {
+>                     devices_counter++;
+>                 }
+>             }
+>         }
+>         printf("Samieh >> Number of devices : %d\r\n", devices_counter);
+>         FILE *hypergraph_file = fopen("devices_nodes_hypergraph.txt", "w");
+>         if (hypergraph_file != NULL)
+>         {
+>             fprintf(hypergraph_file, "%d %d\n", devices_counter, nodes_counter);
+>             for (i = 0; i < DEVmaxnum; i++)
+>             {
+>                 GENmodel *model;
+>                 for (model = ckt->CKThead[i]; model != NULL; model = model->GENnextModel) // sub model (NTYPE, PTYPE, ... etc)
+>                 {
+>                     GENinstance *instance;
+>                     for (instance = model->GENinstances; instance; instance = instance->GENnextInstance)
+>                     {
+>                         int dev_nodes[4];
+>                         dev_nodes[0] = instance->GENnode1;
+>                         dev_nodes[1] = instance->GENnode2;
+>                         dev_nodes[2] = instance->GENnode3;
+>                         dev_nodes[3] = instance->GENnode4;
+>                         fprintf(hypergraph_file, "%d", dev_nodes[0]);
+>                         if (dev_nodes[1] != dev_nodes[0])
+>                         {
+>                             fprintf(hypergraph_file, " %d", dev_nodes[1]);
+>                         }
+>                         if (i == 17) // MOSFET
+>                         {
+>                             int j, k;
+>                             for (k = 2; k < 4; k++)
+>                             {
+>                                 for (j = 0; j < k; j++)
+>                                 {
+>                                     if (dev_nodes[j] == dev_nodes[k])
+>                                     {
+>                                         break;
+>                                     }
+>                                 }
+>                                 if (j == k)
+>                                 {
+>                                     fprintf(hypergraph_file, " %d", dev_nodes[k]);
+>                                 }
+>                             }
+>                         }
+>                         fprintf(hypergraph_file, "\n");
+>                     }
+>                 }
+>             }
+>             fclose(hypergraph_file);
+>         }
+>         else
+>         {
+>             printf("Samieh >> cannot open hypergraph file\n");
+>         }
+>         printf("Samieh >> Done\n");
+>         /* Ahmed Samieh - end of create devices_nodes hypergraph */
