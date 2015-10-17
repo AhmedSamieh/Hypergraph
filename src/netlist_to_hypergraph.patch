@@ -1,6 +1,6 @@
 11a12
 > #include "ngspice/devdefs.h" // Ahmed Samieh
-148a150,220
+148a150,221
 > 
 >         /* Ahmed Samieh - start of create devices_nodes hypergraph */
 >         int nodes_counter = (ckt->CKTlastNode->number + 1);
@@ -24,12 +24,13 @@
 >         if (hypergraph_file != NULL)
 >         {
 >             fprintf(hypergraph_file, "%d %d\n", devices_counter, nodes_counter);
->             for (i = 0; i < DEVmaxnum; i++)
+>             for (i = 0; i < DEVmaxnum; i++) // Main model (RES, CAP, MOSFET, ... etc)
 >             {
 >                 GENmodel *model;
 >                 for (model = ckt->CKThead[i]; model != NULL; model = model->GENnextModel) // sub model (NTYPE, PTYPE, ... etc)
 >                 {
 >                     GENinstance *instance;
+>                     printf("Samieh >> model %d (%s)\n", i, model->GENmodName);
 >                     for (instance = model->GENinstances; instance; instance = instance->GENnextInstance)
 >                     {
 >                         int dev_nodes[4];
@@ -42,7 +43,7 @@
 >                         {
 >                             fprintf(hypergraph_file, " %d", dev_nodes[1]);
 >                         }
->                         if (i == 17) // MOSFET
+>                         if (i == 12) // MOSFET
 >                         {
 >                             int j, k;
 >                             for (k = 2; k < 4; k++)

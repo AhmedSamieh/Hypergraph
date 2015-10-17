@@ -8,7 +8,7 @@
 // nedges    : input
 // xadj      : input/output
 // adjacency : input/output
-// order     : input - order[new_lable] = old_lable
+// order     : input (order[new_lable] = old_lable)
 void apply_order(int nedges, int **xadj, int **adjacency, int *order)
 {
     int i, j;

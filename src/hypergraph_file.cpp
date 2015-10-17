@@ -40,8 +40,20 @@ void hypergraph_load(FILE *fp,
     int number, delta, hedges_index, counter;
     unsigned int offset;
     char byte, byte2;
-    fgets(buffer, sizeof(buffer), fp);
-    sscanf(buffer, "%d%c%d%c%n", nhedges, &byte, nvtxs, &byte2, &delta);
+    //fgets(buffer, sizeof(buffer), fp);
+    do
+    {
+        fgets(buffer, sizeof(buffer), fp);
+    }
+    while (buffer[0] == 'c');
+    if (buffer[0] == 'p')
+    {
+        sscanf(buffer + 6, "%d%c%d%c%n", nvtxs, &byte2, nhedges, &byte, &delta);
+    }
+    else
+    {
+        sscanf(buffer, "%d%c%d%c%n", nhedges, &byte, nvtxs, &byte2, &delta);
+    }
     *eptr = new int[*nhedges + 1];
     hedges = new list<int>[*nhedges];
     counter = 0;
@@ -49,9 +61,11 @@ void hypergraph_load(FILE *fp,
     offset = 0;
     while (fgets(buffer + offset, sizeof(buffer) - offset, fp))
     {
+        //printf("buffer = {%s}\n", buffer);
         offset = 0;
         while (sscanf(buffer + offset, "%d%c%n", &number, &byte, &delta) == 2)
         {
+            //printf("number = %d, byte = %c, delta = %d\n", number, byte, delta);
             counter++;
             hedges[hedges_index].push_back(number);
             offset += delta;
@@ -66,6 +80,20 @@ void hypergraph_load(FILE *fp,
             memmove(buffer, buffer + offset, sizeof(buffer) - offset);
         }
         offset = sizeof(buffer) - offset - 1;
+    }
+    if (offset != 0)
+    {
+        offset = 0;
+        sscanf(buffer + offset, "%d%c%n", &number, &byte, &delta);
+        //printf("number = %d, byte = %c, delta = %d\n", number, byte, delta);
+        counter++;
+        hedges[hedges_index].push_back(number);
+        offset += delta;
+        if (byte == '\n')
+        {
+            offset = sizeof(buffer) - 1;
+            hedges_index++;
+        }
     }
     *eind = new int[counter];
     counter = 0;
