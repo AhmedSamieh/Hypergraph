@@ -12,12 +12,14 @@ void hypergraph_load(const char *filename,
                      int        *nhedges,
                      int        *nvtxs,
                      int       **eptr,
-                     int       **eind);
+                     int       **eind,
+                     bool        cnf_file = false);
 void hypergraph_save(const char *filename,
                      int         nhedges,
                      int         nvtxs,
                      int        *eptr,
-                     int        *eind);
+                     int        *eind,
+                     bool        cnf_file = false);
 void hypergraph_save_pairs(const char *filename,
                            int         nhedges,
                            int        *eptr,
@@ -26,12 +28,14 @@ void hypergraph_load(FILE *fp,
                      int  *nhedges,
                      int  *nvtxs,
                      int **eptr,
-                     int **eind);
+                     int **eind,
+                     bool  cnf_file = false);
 void hypergraph_save(FILE *fp,
                      int   nhedges,
                      int   nvtxs,
                      int  *eptr,
-                     int  *eind);
+                     int  *eind,
+                     bool  cnf_file = false);
 void hypergraph_save_pairs(FILE *fp,
                            int   nhedges,
                            int  *eptr,

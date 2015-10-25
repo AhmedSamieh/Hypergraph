@@ -11,7 +11,8 @@ all:
 	g++ -Wall -Wextra hpart.cpp -I../ ../graph_partition.cpp ../hypergraph_file.cpp -o hpart
 	g++ -Wall -Wextra hecho.cpp -I../ ../hypergraph_file.cpp -o hecho
 	g++ -Wall -Wextra habs.cpp -I../ ../hypergraph_file.cpp -o habs
+	g++ -Wall -Wextra htask.cpp -I../ -I../order ../order/apply_order.cpp ../order/CutHillMcKee.cpp ../hypergraph_edges.cpp ../hypergraph_inverse.cpp ../hypergraph_file.cpp -o htask
 
 clean:
-	rm -rf hinv hpairs horder_cm horder_rcm hedges hpart hecho habs
+	rm -rf hinv hpairs horder_cm horder_rcm hedges hpart hecho habs htask
 

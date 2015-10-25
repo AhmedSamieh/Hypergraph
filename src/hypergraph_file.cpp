@@ -16,12 +16,13 @@ void hypergraph_load(const char *filename,
                      int        *nhedges,
                      int        *nvtxs,
                      int       **eptr,
-                     int       **eind)
+                     int       **eind,
+                     bool        cnf_file)
 {
     FILE *fp;
     if ((fp = fopen(filename, "r")) != NULL)
     {
-        hypergraph_load(fp, nhedges, nvtxs, eptr, eind);
+        hypergraph_load(fp, nhedges, nvtxs, eptr, eind, cnf_file);
         fclose(fp);
     }
     else
@@ -33,20 +34,20 @@ void hypergraph_load(FILE *fp,
                      int  *nhedges,
                      int  *nvtxs,
                      int **eptr,
-                     int **eind)
+                     int **eind,
+                     bool cnf_file)
 {
     char buffer[128];
     list<int> *hedges;
     int number, delta, hedges_index, counter;
     unsigned int offset;
     char byte, byte2;
-    //fgets(buffer, sizeof(buffer), fp);
     do
     {
         fgets(buffer, sizeof(buffer), fp);
     }
-    while (buffer[0] == 'c');
-    if (buffer[0] == 'p')
+    while (buffer[0] == 'c'); // cnf_file
+    if (buffer[0] == 'p') // cnf_file
     {
         sscanf(buffer + 6, "%d%c%d%c%n", nvtxs, &byte2, nhedges, &byte, &delta);
     }
@@ -67,7 +68,14 @@ void hypergraph_load(FILE *fp,
         {
             //printf("number = %d, byte = %c, delta = %d\n", number, byte, delta);
             counter++;
-            hedges[hedges_index].push_back(number);
+            if (cnf_file == true && number == 0)
+            {
+                // end of line
+            }
+            else
+            {
+                hedges[hedges_index].push_back(number);
+            }
             offset += delta;
             if (byte == '\n')
             {
@@ -87,7 +95,14 @@ void hypergraph_load(FILE *fp,
         sscanf(buffer + offset, "%d%c%n", &number, &byte, &delta);
         //printf("number = %d, byte = %c, delta = %d\n", number, byte, delta);
         counter++;
-        hedges[hedges_index].push_back(number);
+        if (cnf_file == true && number == 0)
+        {
+            // end of line
+        }
+        else
+        {
+            hedges[hedges_index].push_back(number);
+        }
         offset += delta;
         if (byte == '\n')
         {
@@ -115,12 +130,13 @@ void hypergraph_save(const char *filename,
                      int         nhedges,
                      int         nvtxs,
                      int        *eptr,
-                     int        *eind)
+                     int        *eind,
+                     bool        cnf_file)
 {
     FILE *fp;
     if ((fp = fopen(filename, "w")) != NULL)
     {
-        hypergraph_save(fp, nhedges, nvtxs, eptr, eind);
+        hypergraph_save(fp, nhedges, nvtxs, eptr, eind, cnf_file);
         fclose(fp);
     }
     else
@@ -132,18 +148,33 @@ void hypergraph_save(FILE *fp,
                      int   nhedges,
                      int   nvtxs,
                      int  *eptr,
-                     int  *eind)
+                     int  *eind,
+                     bool cnf_file)
 {
     int i, j;
 
-    fprintf(fp, "%d %d\n", nhedges, nvtxs);
+    if (cnf_file)
+    {
+        printf("p cnf %d %d\n", nvtxs, nhedges);
+    }
+    else
+    {
+        fprintf(fp, "%d %d\n", nhedges, nvtxs);
+    }
     for (i = 0; i < nhedges; i++)
     {
         for (j = eptr[i]; j < eptr[i + 1]; j++)
         {
             fprintf(fp, "%s%d", j == eptr[i] ? "" : " ", eind[j]);
         }
-        fprintf(fp, "\n");
+        if (cnf_file)
+        {
+            fprintf(fp, " 0\n");
+        }
+        else
+        {
+            fprintf(fp, "\n");
+        }
     }
 }
 void hypergraph_save_pairs(const char *filename,
