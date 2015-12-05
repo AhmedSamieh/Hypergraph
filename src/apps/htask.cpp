@@ -4,6 +4,17 @@
  *  email   ahmed.samieh@gmail.com
  *
  *          contains test app for hypergraph_load, hypergraph_save APIs
+ *          reorder the equations
+ *          1 - read the graph from cnf file 2 times
+ *          2 - get abs value for one instance
+ *          3 - inverse the output graph from step 2
+ *          4 - get edge_edges connectivity graph
+ *          5 - generate pairs file
+ *          6 - find CutHillMcKee order
+ *          7 - apply the order
+ *          8 - generate pairs file
+ *          9 - apply the order on the second instance from step 1
+ *          10 - save the output 
  ******************************************************************************/
 #include "hypergraph_file.h"
 #include "hypergraph_inverse.h"
