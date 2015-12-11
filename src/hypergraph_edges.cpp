@@ -55,7 +55,14 @@ void hypergraph_edges(int   nhedges,
              iter != edges[i].end();
              iter++)
         {
+#ifdef METIS
+            if (i != *iter)
+            {
+                (*edges_eind)[j++] = *iter + 1;
+            }
+#else
             (*edges_eind)[j++] = *iter;
+#endif
         }
     }
     (*edges_eptr)[nhedges] = j;

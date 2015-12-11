@@ -7,7 +7,9 @@ all:
 	g++ -Wall -Wextra hpairs.cpp -I../ ../hypergraph_file.cpp -o hpairs
 	g++ -Wall -Wextra horder_cm.cpp -I../ -I../order ../hypergraph_file.cpp ../order/CutHillMcKee.cpp ../order/apply_order.cpp -o horder_cm
 	g++ -Wall -Wextra horder_rcm.cpp -I../ -I../order ../hypergraph_file.cpp ../order/ReverseCutHillMcKee.cpp ../order/apply_order.cpp -o horder_rcm
+	g++ -Wall -Wextra horder_metis.cpp -I../ -I../order ../hypergraph_file.cpp ../order/apply_order.cpp -o horder_metis
 	g++ -Wall -Wextra hedges.cpp -I../ ../hypergraph_edges.cpp ../hypergraph_file.cpp -o hedges
+	g++ -Wall -Wextra hedges.cpp -I../ ../hypergraph_edges.cpp ../hypergraph_file.cpp -DMETIS -o hedges_metis
 	g++ -Wall -Wextra hpart.cpp -I../ ../graph_partition.cpp ../hypergraph_file.cpp -o hpart
 	g++ -Wall -Wextra hecho.cpp -I../ ../hypergraph_file.cpp -o hecho
 	g++ -Wall -Wextra habs.cpp -I../ ../hypergraph_file.cpp -o habs
