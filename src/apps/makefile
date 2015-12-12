@@ -16,5 +16,5 @@ all:
 	g++ -Wall -Wextra htask.cpp -I../ -I../order ../order/apply_order.cpp ../order/CutHillMcKee.cpp ../hypergraph_edges.cpp ../hypergraph_inverse.cpp ../hypergraph_file.cpp -o htask
 
 clean:
-	rm -rf hinv hpairs horder_cm horder_rcm hedges hpart hecho habs htask
+	rm -rf hinv hpairs horder_cm horder_rcm hedges hpart hecho habs htask horder_metis hedges_metis
 
