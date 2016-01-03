@@ -14,7 +14,6 @@ int main(int argc, char **argv)
     int  nhedges = 0, nvtxs = 0;
     int *eptr = NULL, *eind = NULL;
     int *edges_eptr = NULL, *edges_eind = NULL;
-
     if (argc == 1)
     {
         hypergraph_load(stdin, &nhedges, &nvtxs, &eptr, &eind);
@@ -26,11 +25,10 @@ int main(int argc, char **argv)
     // get edge_edges graph from edge_vertices hypergraph
     hypergraph_edges(nhedges, nvtxs, eptr, eind, &edges_eptr, &edges_eind);
 #ifdef METIS
-    hypergraph_save(stdout, nhedges, edges_eptr[nhedges]/2, edges_eptr, edges_eind);
+    hypergraph_save(stdout, nhedges, edges_eptr[nhedges] / 2, edges_eptr, edges_eind);
 #else
     hypergraph_save(stdout, nhedges, nhedges, edges_eptr, edges_eind);
 #endif
-
     delete[] edges_eptr;
     delete[] edges_eind;
     delete[] eptr;

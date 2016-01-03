@@ -38,8 +38,8 @@ void hypergraph_edges(int   nhedges,
         for (int j = eptr[i]; j < eptr[i + 1]; j++)
         {
             for (list<int>::iterator iter = vtxs[eind[j]].begin();
-                 iter != vtxs[eind[j]].end();
-                 iter++)
+                    iter != vtxs[eind[j]].end();
+                    iter++)
             {
                 edges[i].insert(*iter);
             }
@@ -52,8 +52,8 @@ void hypergraph_edges(int   nhedges,
     {
         (*edges_eptr)[i] = j;
         for (set<int>::iterator iter = edges[i].begin();
-             iter != edges[i].end();
-             iter++)
+                iter != edges[i].end();
+                iter++)
         {
 #ifdef METIS
             if (i != *iter)

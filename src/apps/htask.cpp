@@ -14,7 +14,7 @@
  *          7 - apply the order
  *          8 - generate pairs file
  *          9 - apply the order on the second instance from step 1
- *          10 - save the output 
+ *          10 - save the output
  ******************************************************************************/
 #include "hypergraph_file.h"
 #include "hypergraph_inverse.h"
@@ -25,12 +25,10 @@ int main(int argc, char **argv)
 {
     int  nhedges = 0, nvtxs = 0;
     int *eptr = NULL, *eind = NULL;
-
     int  org_nhedges = 0, org_nvtxs = 0;
     int *org_eptr = NULL, *org_eind = NULL;
     int *inv_eptr = NULL, *inv_eind = NULL;
     int *edges_eptr = NULL, *edges_eind = NULL;
-
     if (argc == 2)
     {
         hypergraph_load(argv[1], &nhedges, &nvtxs, &eptr, &eind, true);

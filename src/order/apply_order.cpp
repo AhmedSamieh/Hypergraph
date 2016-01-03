@@ -13,7 +13,6 @@ void apply_order(int nedges, int **xadj, int **adjacency, int *order)
 {
     int i, j;
     int *iorder, *temp_xadj, *temp_adjacency;
-
     iorder = new int[nedges];
     temp_xadj = new int[nedges + 1];
     temp_adjacency = new int[(*xadj)[nedges]];

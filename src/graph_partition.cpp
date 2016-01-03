@@ -48,29 +48,29 @@ using namespace std;
                 end = i;
                 ports = external_nodes.size();
             }
-            
+
         }
     }*/
-    /*int connections_all, connections_up, connections_down;
-    for (int i = 0; i < nedges; i++)
+/*int connections_all, connections_up, connections_down;
+for (int i = 0; i < nedges; i++)
+{
+    connections_all = eptr[i + 1] - eptr[i];
+    connections_up = 0;
+    connections_down = 0;
+    for (int j = eptr[i]; j < eptr[i + 1]; j++)
     {
-        connections_all = eptr[i + 1] - eptr[i];
-        connections_up = 0;
-        connections_down = 0;
-        for (int j = eptr[i]; j < eptr[i + 1]; j++)
+        if (eind[j] > i)
         {
-            if (eind[j] > i)
-            {
-                connections_down++;
-            }
-            else if (eind[j] < i)
-            {
-                connections_up++;
-            }
+            connections_down++;
         }
-        printf("%03d - total : %02d up : %02d down : %02d, from : %02d to : %02d\n",
-               i, connections_all, connections_up, connections_down, eind[eptr[i]], eind[eptr[i + 1] - 1]);
+        else if (eind[j] < i)
+        {
+            connections_up++;
+        }
     }
-    (void)nvtxs;
+    printf("%03d - total : %02d up : %02d down : %02d, from : %02d to : %02d\n",
+           i, connections_all, connections_up, connections_down, eind[eptr[i]], eind[eptr[i + 1] - 1]);
+}
+(void)nvtxs;
 }*/
 

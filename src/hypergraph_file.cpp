@@ -117,8 +117,8 @@ void hypergraph_load(FILE *fp,
     for (int i = 0; i < *nhedges; i++)
     {
         for (list<int>::iterator iter = hedges[i].begin();
-             iter != hedges[i].end();
-             iter++)
+                iter != hedges[i].end();
+                iter++)
         {
             (*eind)[counter++] = *iter;
         }
@@ -152,7 +152,6 @@ void hypergraph_save(FILE *fp,
                      bool cnf_file)
 {
     int i, j;
-
     if (cnf_file)
     {
         printf("p cnf %d %d\n", nvtxs, nhedges);
@@ -199,7 +198,6 @@ void hypergraph_save_pairs(FILE *fp,
                            int  *eind)
 {
     int i, j;
-
     for (i = 0; i < nhedges; i++)
     {
         for (j = eptr[i]; j < eptr[i + 1]; j++)

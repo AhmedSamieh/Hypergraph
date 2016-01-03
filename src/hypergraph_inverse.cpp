@@ -38,8 +38,8 @@ void hypergraph_invers(int   nhedges,
     {
         (*inv_eptr)[i] = j;
         for (list<int>::iterator iter = vtxs[i].begin();
-             iter != vtxs[i].end();
-             iter++)
+                iter != vtxs[i].end();
+                iter++)
         {
             (*inv_eind)[j++] = *iter;
         }

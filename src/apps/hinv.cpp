@@ -14,7 +14,6 @@ int main(int argc, char **argv)
     int  nhedges = 0, nvtxs = 0;
     int *eptr = NULL, *eind = NULL;
     int *inv_eptr = NULL, *inv_eind = NULL;
-
     if (argc == 1)
     {
         hypergraph_load(stdin, &nhedges, &nvtxs, &eptr, &eind);
@@ -26,7 +25,6 @@ int main(int argc, char **argv)
     // inverse the hypergraph
     hypergraph_invers(nhedges, nvtxs, eptr, eind, &inv_eptr, &inv_eind);
     hypergraph_save(stdout, nvtxs, nhedges, inv_eptr, inv_eind);
-
     delete[] inv_eptr;
     delete[] inv_eind;
     delete[] eptr;
