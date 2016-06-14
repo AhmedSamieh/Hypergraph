@@ -11,10 +11,11 @@ all:
 	g++ -Wall -Wextra hedges.cpp -I../ ../hypergraph_edges.cpp ../hypergraph_file.cpp -o hedges
 	g++ -Wall -Wextra hedges.cpp -I../ ../hypergraph_edges.cpp ../hypergraph_file.cpp -DMETIS -o hedges_metis
 	g++ -Wall -Wextra hpart.cpp -I../ ../graph_partition.cpp ../hypergraph_file.cpp -o hpart
+	g++ -std=c++11 -Wall -Wextra hpart2.cpp -I../ ../graph_partition.cpp ../hypergraph_file.cpp -o hpart2
 	g++ -Wall -Wextra hecho.cpp -I../ ../hypergraph_file.cpp -o hecho
 	g++ -Wall -Wextra habs.cpp -I../ ../hypergraph_file.cpp -o habs
 	g++ -Wall -Wextra htask.cpp -I../ -I../order ../order/apply_order.cpp ../order/CutHillMcKee.cpp ../hypergraph_edges.cpp ../hypergraph_inverse.cpp ../hypergraph_file.cpp -o htask
 
 clean:
-	rm -rf hinv hpairs horder_cm horder_rcm hedges hpart hecho habs htask horder_metis hedges_metis
+	rm -rf hinv hpairs horder_cm horder_rcm hedges hpart hpart2 hecho habs htask horder_metis hedges_metis
 
