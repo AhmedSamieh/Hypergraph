@@ -3,9 +3,11 @@
  *  auther  Ahmed Samieh
  *  email   ahmed.samieh@gmail.com
  *
- *          contains test app for hypergraph_load, graph_partition
  ******************************************************************************/
 #include "hypergraph_file.h"
+#include "hypergraph_inverse.h"
+#include "hypergraph_edges.h"
+#include <vector>
 #include <set>
 #include <map>
 #include <cstdlib>
@@ -14,38 +16,39 @@ using namespace std;
 //#define DEBUG
 int main(int argc, char **argv)
 {
-    int  nodes_nodes_nedges = 0, nodes_nodes_nvtxs = 0;
-    int  nodes_devices_nedges = 0, nodes_devices_nvtxs = 0;
-    int  devices_nodes_nedges = 0, devices_nodes_nvtxs = 0;
-    int *nodes_nodes_eptr = NULL, *nodes_nodes_eind = NULL;
-    int *nodes_devices_eptr = NULL, *nodes_devices_eind = NULL;
+    int  number_of_devices = 0, number_of_nodes = 0;
     int *devices_nodes_eptr = NULL, *devices_nodes_eind = NULL;
+    int *nodes_devices_eptr = NULL, *nodes_devices_eind = NULL;
     FILE *f;
     int *order = NULL, *iorder = NULL;
-    if (argc == 8)
-    {
-        hypergraph_load(argv[1], &nodes_nodes_nedges, &nodes_nodes_nvtxs, &nodes_nodes_eptr, &nodes_nodes_eind);
-        hypergraph_load(argv[2], &nodes_devices_nedges, &nodes_devices_nvtxs, &nodes_devices_eptr, &nodes_devices_eind);
-        hypergraph_load(argv[3], &devices_nodes_nedges, &devices_nodes_nvtxs, &devices_nodes_eptr, &devices_nodes_eind);
-        // iorder[old_lable] = new_lable
-        f = fopen(argv[4], "r");
-        order  = new int[nodes_nodes_nedges];
-        iorder = new int[nodes_nodes_nedges];
-        for (int i = 0; i < nodes_nodes_nedges; i++)
-        {
-            int v;
-            fscanf(f, "%d", &v);
-            order[v] = i;
-            iorder[i] = v;
-        }
-        fclose(f);
-    }
     set<int> internal_nodes;
     set<int> external_nodes;
+    vector< set<int> > partition_internal_nodes_sets;
+    vector< set<int> > partition_external_nodes_sets;
     set<int> temp_external_nodes;
-    map<int, int> handled_devices;
+    map<int, int> handled_devices; // device_partition
     map<int, int> temp_handled_devices;
-    for (double ratio = atof(argv[5]); ratio <= atof(argv[6]); ratio += atof(argv[7]))
+    if (argc != 6)
+    {
+        return -1;
+    }
+    // load devices_nodes
+    hypergraph_load(argv[1], &number_of_devices, &number_of_nodes, &devices_nodes_eptr, &devices_nodes_eind);
+    // get nodes_devices
+    hypergraph_invers(number_of_devices, number_of_nodes, devices_nodes_eptr, devices_nodes_eind, &nodes_devices_eptr, &nodes_devices_eind);
+    // iorder[old_lable] = new_lable
+    f = fopen(argv[2], "r");
+    order  = new int[number_of_nodes];
+    iorder = new int[number_of_nodes];
+    for (int i = 0; i < number_of_nodes; i++)
+    {
+        int v;
+        fscanf(f, "%d", &v);
+        order[v] = i;
+        iorder[i] = v;
+    }
+    fclose(f);
+    for (double ratio = atof(argv[3]); ratio <= atof(argv[4]); ratio += atof(argv[5]))
     {
         int z_matrix_size = 0;
         int partition_number = 0;
@@ -54,10 +57,12 @@ int main(int argc, char **argv)
         external_nodes.clear();
         temp_external_nodes.clear();
         handled_devices.clear();
+        partition_internal_nodes_sets.clear();
+        partition_external_nodes_sets.clear();
 #if defined(DEBUG) || 1
-        printf("total number of nodes : %d, ratio : %f\n", nodes_nodes_nedges, ratio);
+        printf("total number of nodes : %d, ratio : %f\n", number_of_nodes, ratio);
 #endif
-        for (int i = 0; i < nodes_nodes_nedges; i++)
+        for (int i = 0; i < number_of_nodes; i++)
         {
             int internal_node = 1;
             // for all devices connected to this node - convert to old order
@@ -113,8 +118,10 @@ int main(int argc, char **argv)
                        (int)internal_nodes.size(),
                        (int)external_nodes.size(),
                        (int)handled_devices.size());
+                partition_internal_nodes_sets.push_back(internal_nodes);
+                partition_external_nodes_sets.push_back(external_nodes);
                 z_matrix_size += external_nodes.size();
-#if defined(DEBUG) || 1
+#if defined(DEBUG) || defined(PRINT_NODES)
                 printf("internal nodes : [");
                 for (auto iter = internal_nodes.begin();
                         iter != internal_nodes.end();
@@ -168,41 +175,84 @@ int main(int argc, char **argv)
                 }
                 printf("]\n");
 #endif
-
             }
             temp_external_nodes.clear();
             temp_handled_devices.clear();
         }
-        printf("partition %d : internal nodes = %d, external nodes = %d, handled devices = %d\n", partition_number,
-               (int)internal_nodes.size(),
-               (int)external_nodes.size(),
-               (int)handled_devices.size());
-        z_matrix_size += external_nodes.size();
-#if defined(DEBUG) || 1
-        printf("internal nodes : [");
-        for (set<int>::iterator iter = internal_nodes.begin();
-                iter != internal_nodes.end();
-                iter++)
+        if (internal_nodes.size() > 0)
         {
-            printf("%d ", *iter);
-        }
-        printf("]\n");
-        printf("may be ports : [");
-        for (set<int>::iterator iter = external_nodes.begin();
-                iter != external_nodes.end();
-                iter++)
-        {
-            printf("%d ", *iter);
-        }
-        printf("]\n");
+            printf("partition %d : internal nodes = %d, external nodes = %d, handled devices = %d\n", partition_number,
+                   (int)internal_nodes.size(),
+                   (int)external_nodes.size(),
+                   (int)handled_devices.size());
+            partition_internal_nodes_sets.push_back(internal_nodes);
+            partition_external_nodes_sets.push_back(external_nodes);
+            z_matrix_size += external_nodes.size();
+#if defined(DEBUG) || defined(PRINT_NODES)
+            printf("internal nodes : [");
+            for (auto iter = internal_nodes.begin();
+                    iter != internal_nodes.end();
+                    iter++)
+            {
+                printf("%d ", *iter);
+            }
+            printf("]\n");
+            printf("may be ports : [");
+            for (auto iter = external_nodes.begin();
+                    iter != external_nodes.end();
+                    iter++)
+            {
+                printf("%d ", *iter);
+            }
+            printf("]\n");
 #endif
+        }
+        else
+        {
+            for (auto it = handled_devices.begin();
+                      it != handled_devices.end();
+                      it++)
+            {
+                if (it->second == partition_number)
+                {
+                    printf("device %d connected to nodes : ", it->first);
+                    for (int k = devices_nodes_eptr[it->first]; k < devices_nodes_eptr[it->first + 1]; k++)
+                    {
+                        printf("[%d (old order), %d (new order)] ", devices_nodes_eind[k], iorder[devices_nodes_eind[k]]);
+                    }
+                    int part = 0, max_included_nodes = 0;
+                    for (auto part_iter = partition_external_nodes_sets.begin();
+                              part_iter != partition_external_nodes_sets.end();
+                              part_iter++)
+                    {
+                        int included_nodes = 0;
+                        for (int k = devices_nodes_eptr[it->first]; k < devices_nodes_eptr[it->first + 1]; k++)
+                        {
+                            if (part_iter->find(iorder[devices_nodes_eind[k]]) != part_iter->end())
+                            {
+                                included_nodes++;
+                            }
+                        }
+                        if (included_nodes >= max_included_nodes)
+                        {
+                            max_included_nodes = included_nodes;
+                            part = part_iter - partition_external_nodes_sets.begin();
+                        }
+                    }
+                    printf(" - attach it to partition %d\n", part);
+                    it->second = part;
+                    for (int k = devices_nodes_eptr[it->first]; k < devices_nodes_eptr[it->first + 1]; k++)
+                    {
+                        partition_external_nodes_sets[part].insert(iorder[devices_nodes_eind[k]]);
+                    }
+                }
+            }
+        }
         printf("Z matrix size : %d\n", z_matrix_size / 2);
         printf("\n");
     }
     delete[] order;
     delete[] iorder;
-    delete[] nodes_nodes_eptr;
-    delete[] nodes_nodes_eind;
     delete[] nodes_devices_eptr;
     delete[] nodes_devices_eind;
     delete[] devices_nodes_eptr;
